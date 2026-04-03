@@ -2,6 +2,8 @@
 
 A fully functional Site Reliability Engineering observability platform built on Kubernetes, implementing the three pillars of observability: metrics, logs, and alerting.
 
+![Grafana Dashboard](screenshots/Pod-Metrics-11.png)
+
 ## Architecture
 ```
 ┌─────────────────────────────────────────┐
