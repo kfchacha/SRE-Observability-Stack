@@ -3,7 +3,7 @@
 A fully functional Site Reliability Engineering observability platform built on Kubernetes, implementing the three pillars of observability: metrics, logs, and alerting.
 
 ## Architecture
-
+```
 ┌─────────────────────────────────────────┐
 │         Kubernetes Cluster (Minikube)   │
 │                                         │
@@ -17,7 +17,7 @@ A fully functional Site Reliability Engineering observability platform built on 
 │  │             │  │ • Grafana       │   │
 │  └─────────────┘  └─────────────────┘   │
 └─────────────────────────────────────────┘
-
+```
 ## Stack
 
 | Component | Purpose | Version |
@@ -183,6 +183,7 @@ Deploys a pod consuming 256MB RAM continuously. Visible on Grafana memory dashbo
 
 ## Project Structure
 
+```
 sre-observability-stack/
 ├── README.md
 ├── manifests/
@@ -204,3 +205,4 @@ sre-observability-stack/
 ├── prometheus-alerts-firing.png
 └── alertmanager-active-alerts.png
 
+```
