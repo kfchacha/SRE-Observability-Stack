@@ -1,0 +1,38 @@
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: AlertmanagerConfig
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"monitoring.coreos.com/v1alpha1","kind":"AlertmanagerConfig","metadata":{"annotations":{},"labels":{"alertmanagerConfig":"sre-demo"},"name":"sre-alertmanager-config","namespace":"monitoring"},"spec":{"receivers":[{"name":"default-receiver","webhookConfigs":[{"sendResolved":true,"url":"http://localhost:5001/alerts"}]},{"name":"critical-receiver","webhookConfigs":[{"sendResolved":true,"url":"http://localhost:5001/alerts"}]}],"route":{"groupBy":["alertname","namespace"],"groupInterval":"5m","groupWait":"30s","receiver":"default-receiver","repeatInterval":"12h","routes":[{"groupWait":"10s","matchers":[{"name":"severity","value":"critical"}],"receiver":"critical-receiver"}]}}}
+  creationTimestamp: "2026-03-31T20:11:39Z"
+  generation: 1
+  labels:
+    alertmanagerConfig: sre-demo
+  name: sre-alertmanager-config
+  namespace: monitoring
+  resourceVersion: "16130"
+  uid: f16d4f1a-eb38-4b32-a78f-b74da780bf80
+spec:
+  receivers:
+  - name: default-receiver
+    webhookConfigs:
+    - sendResolved: true
+      url: http://localhost:5001/alerts
+  - name: critical-receiver
+    webhookConfigs:
+    - sendResolved: true
+      url: http://localhost:5001/alerts
+  route:
+    groupBy:
+    - alertname
+    - namespace
+    groupInterval: 5m
+    groupWait: 30s
+    receiver: default-receiver
+    repeatInterval: 12h
+    routes:
+    - groupWait: 10s
+      matchers:
+      - name: severity
+        value: critical
+      receiver: critical-receiver

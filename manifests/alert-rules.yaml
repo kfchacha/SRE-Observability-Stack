@@ -1,0 +1,74 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"monitoring.coreos.com/v1","kind":"PrometheusRule","metadata":{"annotations":{},"labels":{"release":"kube-prom-stack"},"name":"sre-demo-alerts","namespace":"monitoring"},"spec":{"groups":[{"name":"pod-health","rules":[{"alert":"PodCrashLooping","annotations":{"description":"Pod {{ .pod }} in namespace {{ .namespace }} is restarting frequently","summary":"Pod {{ .pod }} is crash looping"},"expr":"rate(kube_pod_container_status_restarts_total[5m]) * 60 \u003e 0","for":"2m","labels":{"severity":"critical"}},{"alert":"PodNotReady","annotations":{"description":"Pod {{ .pod }} in {{ .namespace }} has been not ready for 2 minutes","summary":"Pod {{ .pod }} is not ready"},"expr":"kube_pod_status_ready{condition=\"true\"} == 0","for":"2m","labels":{"severity":"warning"}}]},{"name":"node-resources","rules":[{"alert":"HighCPUUsage","annotations":{"description":"CPU usage is above 80% for 5 minutes","summary":"High CPU usage on {{ .instance }}"},"expr":"100 - (avg by(instance) (rate(node_cpu_seconds_total{mode=\"idle\"}[2m])) * 100) \u003e 80","for":"5m","labels":{"severity":"warning"}},{"alert":"HighMemoryUsage","annotations":{"description":"Memory usage is above 85% for 5 minutes","summary":"High memory usage on {{ .instance }}"},"expr":"(1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100 \u003e 85","for":"5m","labels":{"severity":"critical"}},{"alert":"DiskSpaceLow","annotations":{"description":"Disk usage above 80%","summary":"Low disk space on {{ .instance }}"},"expr":"(1 - (node_filesystem_avail_bytes / node_filesystem_size_bytes)) * 100 \u003e 80","for":"10m","labels":{"severity":"warning"}}]},{"name":"kubernetes-health","rules":[{"alert":"DeploymentReplicasMismatch","annotations":{"description":"Expected replicas do not match available replicas","summary":"Deployment {{ .deployment }} has replica mismatch"},"expr":"kube_deployment_spec_replicas != kube_deployment_status_available_replicas","for":"5m","labels":{"severity":"critical"}}]}]}}
+    prometheus-operator-validated: "true"
+  creationTimestamp: "2026-03-31T20:01:11Z"
+  generation: 1
+  labels:
+    release: kube-prom-stack
+  name: sre-demo-alerts
+  namespace: monitoring
+  resourceVersion: "15625"
+  uid: 4766ca59-17d7-4097-8225-4eac05f6ce2e
+spec:
+  groups:
+  - name: pod-health
+    rules:
+    - alert: PodCrashLooping
+      annotations:
+        description: Pod {{ .pod }} in namespace {{ .namespace }} is restarting frequently
+        summary: Pod {{ .pod }} is crash looping
+      expr: rate(kube_pod_container_status_restarts_total[5m]) * 60 > 0
+      for: 2m
+      labels:
+        severity: critical
+    - alert: PodNotReady
+      annotations:
+        description: Pod {{ .pod }} in {{ .namespace }} has been not ready for 2 minutes
+        summary: Pod {{ .pod }} is not ready
+      expr: kube_pod_status_ready{condition="true"} == 0
+      for: 2m
+      labels:
+        severity: warning
+  - name: node-resources
+    rules:
+    - alert: HighCPUUsage
+      annotations:
+        description: CPU usage is above 80% for 5 minutes
+        summary: High CPU usage on {{ .instance }}
+      expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[2m]))
+        * 100) > 80
+      for: 5m
+      labels:
+        severity: warning
+    - alert: HighMemoryUsage
+      annotations:
+        description: Memory usage is above 85% for 5 minutes
+        summary: High memory usage on {{ .instance }}
+      expr: (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) *
+        100 > 85
+      for: 5m
+      labels:
+        severity: critical
+    - alert: DiskSpaceLow
+      annotations:
+        description: Disk usage above 80%
+        summary: Low disk space on {{ .instance }}
+      expr: (1 - (node_filesystem_avail_bytes / node_filesystem_size_bytes)) * 100
+        > 80
+      for: 10m
+      labels:
+        severity: warning
+  - name: kubernetes-health
+    rules:
+    - alert: DeploymentReplicasMismatch
+      annotations:
+        description: Expected replicas do not match available replicas
+        summary: Deployment {{ .deployment }} has replica mismatch
+      expr: kube_deployment_spec_replicas != kube_deployment_status_available_replicas
+      for: 5m
+      labels:
+        severity: critical
